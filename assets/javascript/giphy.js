@@ -1,59 +1,71 @@
-var animals = ["dog", "bird", "fish", "cat", "goat", "horse", "cow"];
+var comedians = ["Adam Sandler", "Will Ferrell", "Chris Farley", "Jimmy Fallon", "Tina Fey", "Chevy Chase", "Bill Murray", "Amy Schumer"];
 
-      function returnGiphys() {
-
-        var giphy = $(this).attr("data-name");
+  function returnGiphys() {
+    //this variable will capture the the object we want to return from our GIPHY API
+    var giphy = $(this).attr("data-name");
         
-        var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=WvXITKaWXq8GVGQWItBeVODmGEiTEjsw&q="
+    var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=WvXITKaWXq8GVGQWItBeVODmGEiTEjsw&q="
          + giphy + "&limit=10&offset=10";
 
-        $.ajax({
-          url: queryURL,
-          method: "GET"
-        }).then(function(response) {
-            
-            console.log(response);
-            
-            var results = response.data;
-            
-            for (var i = 0; i < results.length; i++) {
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {
+
+      var results = response.data;
+      console.log(results);
+
+      for (var i = 0; i < results.length; i++) {
         
-                var gifDiv = $("<div>");
-                var rating = results[i].rating;
-                var p = $("<p>").text("Rating: " + rating);
-                var animalImage = $("<img>");
-                animalImage.attr("src", results[i].images.fixed_height.url);
-                
-                gifDiv.append(animalImage);
-                gifDiv.append(p);
+        var gifDiv = $("<div>");
+        gifDiv.addClass("giphyImg")
+        var rating = results[i].rating;
+        var p = $("<p>").text("Rating: " + rating);
+        var comediansImage = $("<img>");
+        comediansImage.attr("src", results[i].images.fixed_height.url);        
+        gifDiv.append(comediansImage);
+        gifDiv.append(p);
   
-                $("#images").prepend(gifDiv);
-            };
+        $("#images").prepend(gifDiv);
+       };
       });
     }
-      function renderButtons() {
 
-        $("#buttons-view").empty();
-
-        for (var i = 0; i < animals.length; i++) {
-        
-         var a = $("<button>");
-          a.addClass("animal");
-          a.attr("data-name", animals[i]);
-          a.text(animals[i]);
-          $("#buttons-view").append(a);
-        }
+  //this should allow user to click on giphy to pause or start it back up.
+  $("#images").on("click", function() {
+    var state = comediansImage;
+      if (state === response.images.fixed_height.url) {
+        $("#images").attr("src", response.images.fixed_height.url);
+      } else {
+        $("#images").attr("src", response.images.fixed_height_still.url);
       }
+});    
+      
+  function renderButtons() {
 
-      $("#add-giphy").on("click", function(event) {
-        event.preventDefault();
-        var animal = $("#giphy-input").val().trim();
-        animals.push(animal);
-        console.log(animals);
+    $("#buttons-view").empty();
 
-        renderButtons();
-      });
+    for (var i = 0; i < comedians.length; i++) {
+        
+      var a = $("<button>");
+       a.addClass("comedians");
+       a.attr("data-name", comedians[i]);
+       a.text(comedians[i]);
+       $("#buttons-view").append(a);
+      }
+    }
 
-    $(document).on("click", ".animal", returnGiphys);
+  $("#add-giphy").on("click", function(event) {
+    event.preventDefault();
+    var comedians = $("#giphy-input").val().trim();
+    comedians.push(comedians);
+    console.log(comedians);
 
-      renderButtons();
+    renderButtons();
+  });
+
+
+
+$(document).on("click", ".comedians", returnGiphys);
+
+  renderButtons();
